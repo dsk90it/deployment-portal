@@ -1,5 +1,5 @@
-import DeploymentCard from './components/DeploymentCard'
-import { data } from './data/MOCK_DATA'
+import DeploymentCard from '@/exercise/DeploymentCard'
+import { data } from '@/data/MOCK_DATA'
 
 function App() {
   return (
