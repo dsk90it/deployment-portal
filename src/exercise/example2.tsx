@@ -90,7 +90,7 @@ import { Input } from '@/components/ui/input'
 export function useDeploymentFilters<
   T extends {
     application: string
-    status: string
+    status: DeploymentStatus
   },
 >(deployments: T[]) {
   const [search, setSearch] = useState('')

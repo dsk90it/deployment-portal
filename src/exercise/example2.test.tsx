@@ -2,15 +2,22 @@ import { describe, expect, it } from 'vitest'
 import { render, screen, renderHook, act, fireEvent } from '@testing-library/react'
 
 import SearchPlaceholder, { useDeploymentFilters } from './example2'
+import type { DeploymentStatus } from '@/types'
 
-const deployments = [
+const deployments: {
+  id: string
+  application: string
+  status: DeploymentStatus
+}[] = [
   {
     id: '1',
     application: 'Customer Portal',
+    status: 'Pending',
   },
   {
     id: '2',
     application: 'Payments API',
+    status: 'Completed',
   },
 ]
 
@@ -39,6 +46,16 @@ describe('useDeploymentFilters', () => {
     })
 
     expect(result.current.filteredDeployments).toEqual([])
+  })
+
+  it('filters deployments by status', () => {
+    const { result } = renderHook(() => useDeploymentFilters(deployments))
+
+    act(() => {
+      result.current.setStatus('Completed')
+    })
+
+    expect(result.current.filteredDeployments).toEqual([deployments[1]])
   })
 })
 

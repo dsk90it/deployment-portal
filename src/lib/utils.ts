@@ -17,6 +17,7 @@ export const nextStatusMap: Record<Deployment['status'], Deployment['status'] | 
   Pending: 'In Progress',
   'In Progress': 'Completed',
   Completed: null,
+  Failed: null,
 }
 
 export const badgeVariantMap = {
@@ -24,6 +25,7 @@ export const badgeVariantMap = {
     Pending: 'secondary',
     'In Progress': 'default',
     Completed: 'outline',
+    Failed: 'destructive',
   },
 
   environment: {
