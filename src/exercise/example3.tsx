@@ -110,6 +110,11 @@
  */
 
 import { useQuery } from '@tanstack/react-query'
+import { getDeployments } from '@/api/diploymentApi'
+import { useDeploymentFilters } from './example2'
+import DeploymentCard from './example1'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 /**
  * TODO
@@ -128,7 +133,66 @@ import { useQuery } from '@tanstack/react-query'
  */
 
 export default function Example3() {
-  // This is a placeholder component to demonstrate the usage of the useQuery hook.
+  const {
+    data = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['deployments'],
+    queryFn: getDeployments,
+  })
 
-  return <>// You can use the useQuery hook to fetch deployments and display them using the DeploymentCard component.</>
+  const { search, setSearch, status, setStatus, filteredDeployments } = useDeploymentFilters(data)
+  const hasDeployments = filteredDeployments.length > 0
+
+  if (isLoading) {
+    return <p>Loading deployments...</p>
+  }
+
+  if (isError) {
+    return <p>Something went wrong.</p>
+  }
+
+  return (
+    <>
+      <div className="mb-6 flex items-center flex-wrap justify-between gap-4">
+        <h1 className="text-3xl font-bold">Deployment Queue</h1>
+        <p className="text-muted-foreground">Total Deployments: {data.length}</p>
+      </div>
+
+      <div className="mb-4 flex flex-col md:flex-row items-center md:justify-between gap-4">
+        <Input
+          type="text"
+          placeholder="Search deployment by name..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        <div className="w-full md:w-48 md:shrink-0">
+          <Select className="w-full" value={status} onChange={(key) => setStatus(String(key))}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="p-2">
+              <SelectItem id="All">All</SelectItem>
+              <SelectItem id="Pending">Pending</SelectItem>
+              <SelectItem id="In Progress">In Progress</SelectItem>
+              <SelectItem id="Completed">Completed</SelectItem>
+              <SelectItem id="Failed">Failed</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {hasDeployments ? (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {filteredDeployments.map((deployment) => (
+            <DeploymentCard key={deployment.id} deployment={deployment} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-muted-foreground">No deployments found.</p>
+      )}
+    </>
+  )
 }
