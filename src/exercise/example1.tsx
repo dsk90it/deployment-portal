@@ -139,7 +139,7 @@ const DeploymentCard = ({ deployment }: DeploymentCardProps) => {
   ]
 
   return (
-    <Card className="w-full">
+    <Card className="w-full hover:ring-primary transition-shadow">
       <CardHeader>
         <CardTitle className="flex flex-wrap items-center gap-1 justify-between">
           {deployment.application}
