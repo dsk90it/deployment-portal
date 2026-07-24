@@ -80,27 +80,29 @@
  *
  * ============================================================================
  */
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { data } from '@/data/MOCK_DATA'
+import DeploymentCard from './example1'
+import { Input } from '@/components/ui/input'
 
-export function useDeploymentFilters<T>(deployments: T[]) {
+// eslint-disable-next-line react-refresh/only-export-components
+export function useDeploymentFilters<T extends { application: string }>(deployments: T[]) {
   const [search, setSearch] = useState('')
 
-  /**
-   * TODO
-   *
-   * Return:
-   *
-   * {
-   *   search,
-   *   setSearch,
-   *   filteredDeployments
-   * }
-   */
+  const filteredDeployments = useMemo(() => {
+    const searchTerm = search.trim().toLowerCase()
+
+    if (!searchTerm) {
+      return deployments
+    }
+
+    return deployments.filter((deployment) => deployment.application.toLowerCase().includes(searchTerm))
+  }, [deployments, search])
 
   return {
     search,
     setSearch,
-    filteredDeployments: deployments,
+    filteredDeployments,
   }
 }
 
@@ -108,6 +110,33 @@ const SearchPlaceholder = () => {
   // This is a placeholder component to demonstrate the usage of the useDeploymentFilters hook.
   //where you can use the hook and display the filtered deployments based on the search input.
   //use sadcn components for input and list rendering.
+
+  const { search, setSearch, filteredDeployments } = useDeploymentFilters(data)
+  const hasDeployments = filteredDeployments.length > 0
+
+  return (
+    <main className="container mx-auto py-8 px-4">
+      <h1 className="mb-6 text-3xl font-bold">Deployment Queue</h1>
+
+      <Input
+        type="text"
+        placeholder="Search deployment by name..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="mb-4"
+      />
+
+      {hasDeployments ? (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {filteredDeployments.map((deployment) => (
+            <DeploymentCard key={deployment.id} deployment={deployment} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-muted-foreground">No deployments found.</p>
+      )}
+    </main>
+  )
 }
 
 export default SearchPlaceholder
