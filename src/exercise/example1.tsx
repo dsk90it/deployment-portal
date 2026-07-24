@@ -107,8 +107,8 @@ const DeploymentCard = ({ deployment }: DeploymentCardProps) => {
   const nextStatus = nextStatusMap[deployment.status]
   const deploymentInfo = [
     {
-      label: 'Version',
-      value: deployment.version,
+      label: 'Priority',
+      value: <Badge variant={badgeVariantMap.priority[deployment.priority]}>{deployment.priority}</Badge>,
     },
     {
       label: 'Environment',
@@ -141,23 +141,20 @@ const DeploymentCard = ({ deployment }: DeploymentCardProps) => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <CardTitle>{deployment.application}</CardTitle>
-            <CardDescription>{deployment.id}</CardDescription>
-          </div>
-
-          <Badge variant={badgeVariantMap.priority[deployment.priority]}>{deployment.priority}</Badge>
-        </div>
+        <CardTitle>
+          {deployment.application} &mdash; {deployment.version}
+        </CardTitle>
+        <CardDescription>{deployment.id}</CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-3">
-        {deploymentInfo.map(({ label, value }) => (
-          <div key={label} className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">{label}</span>
-            <span className="font-medium">{value}</span>
-          </div>
-        ))}
+        <div className="flex items-center gap-2">
+          {deploymentInfo.map(({ label, value }) => (
+            <span title={label} className="font-medium">
+              {value}
+            </span>
+          ))}
+        </div>
 
         <Separator />
 
