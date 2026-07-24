@@ -1,7 +1,18 @@
-const App = () => {
-  return <h1 className="flex justify-center items-center h-screen text-3xl font-bold">
- Please go to the exercise folder and open the example1.tsx file to complete the exercise.
-  </h1>;
-};
+import DeploymentCard from './components/DeploymentCard'
+import { data } from './data/MOCK_DATA'
 
-export default App;
+function App() {
+  return (
+    <main className="container mx-auto py-8 px-4">
+      <h1 className="mb-6 text-3xl font-bold">Deployment Queue</h1>
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {data.map((deployment) => (
+          <DeploymentCard key={deployment.id} deployment={deployment} />
+        ))}
+      </div>
+    </main>
+  )
+}
+
+export default App
