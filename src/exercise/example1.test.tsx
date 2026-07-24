@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import DeploymentCard from './DeploymentCard'
+import DeploymentCard from './example1'
 import type { Deployment } from '@/types'
 
 const deployment = {

@@ -80,10 +80,10 @@
  *
  * ============================================================================
  */
-import { useState } from "react";
+import { useState } from 'react'
 
 export function useDeploymentFilters<T>(deployments: T[]) {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('')
 
   /**
    * TODO
@@ -101,13 +101,13 @@ export function useDeploymentFilters<T>(deployments: T[]) {
     search,
     setSearch,
     filteredDeployments: deployments,
-  };
+  }
 }
 
 const SearchPlaceholder = () => {
- // This is a placeholder component to demonstrate the usage of the useDeploymentFilters hook.
- //where you can use the hook and display the filtered deployments based on the search input.
- //use sadcn components for input and list rendering.
-};
+  // This is a placeholder component to demonstrate the usage of the useDeploymentFilters hook.
+  //where you can use the hook and display the filtered deployments based on the search input.
+  //use sadcn components for input and list rendering.
+}
 
-export default SearchPlaceholder;
+export default SearchPlaceholder

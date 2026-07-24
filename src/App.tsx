@@ -1,4 +1,4 @@
-import DeploymentCard from '@/exercise/DeploymentCard'
+import DeploymentCard from '@/exercise/example1'
 import { data } from '@/data/MOCK_DATA'
 
 function App() {

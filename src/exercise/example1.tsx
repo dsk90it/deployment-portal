@@ -1,5 +1,3 @@
-
-
 /**
  * ============================================================================
  * Exercise 1 - Deployment Card
@@ -94,21 +92,90 @@ priority: "Low" | "Medium" | "High" | "Critical";
  *
  * ============================================================================
  */
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import type { Deployment } from '@/types'
+import { badgeVariantMap, formatDate, nextStatusMap } from '@/lib/utils'
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+interface DeploymentCardProps {
+  deployment: Deployment
+}
 
-const DeploymentCard = () => {
-  return <div>DeploymentCard</div>;
-};
+const DeploymentCard = ({ deployment }: DeploymentCardProps) => {
+  const nextStatus = nextStatusMap[deployment.status]
+  const deploymentInfo = [
+    {
+      label: 'Version',
+      value: deployment.version,
+    },
+    {
+      label: 'Environment',
+      value: <Badge variant={badgeVariantMap.environment[deployment.environment]}>{deployment.environment}</Badge>,
+    },
+    {
+      label: 'Status',
+      value: <Badge variant={badgeVariantMap.status[deployment.status]}>{deployment.status}</Badge>,
+    },
+  ]
+  const metadata = [
+    {
+      label: 'Requested By',
+      value: deployment.requestedBy,
+    },
+    {
+      label: 'Requested At',
+      value: formatDate(deployment.requestedAt),
+    },
+    {
+      label: 'Scheduled At',
+      value: formatDate(deployment.scheduledAt),
+    },
+    {
+      label: 'Region',
+      value: deployment.region,
+    },
+  ]
 
-export default DeploymentCard;
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <CardTitle>{deployment.application}</CardTitle>
+            <CardDescription>{deployment.id}</CardDescription>
+          </div>
+
+          <Badge variant={badgeVariantMap.priority[deployment.priority]}>{deployment.priority}</Badge>
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-3">
+        {deploymentInfo.map(({ label, value }) => (
+          <div key={label} className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">{label}</span>
+            <span className="font-medium">{value}</span>
+          </div>
+        ))}
+
+        <Separator />
+
+        {metadata.map(({ label, value }) => (
+          <div key={label} className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">{label}</span>
+            <span className="font-medium">{value}</span>
+          </div>
+        ))}
+      </CardContent>
+
+      {nextStatus && (
+        <CardFooter>
+          <Button className="w-full">Advance to {nextStatus}</Button>
+        </CardFooter>
+      )}
+    </Card>
+  )
+}
+
+export default DeploymentCard
