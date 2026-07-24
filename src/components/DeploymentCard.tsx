@@ -3,43 +3,10 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import type { Deployment } from '@/types'
-
+import { badgeVariantMap, formatDate, nextStatusMap } from '@/lib/utils'
 interface DeploymentCardProps {
   deployment: Deployment
 }
-
-const nextStatusMap = {
-  Pending: 'In Progress',
-  'In Progress': 'Completed',
-  Completed: null,
-} as const
-
-const statusBadgeVariant = {
-  Pending: 'secondary',
-  'In Progress': 'default',
-  Completed: 'outline',
-} as const
-
-const environmentBadgeVariant = {
-  Production: 'destructive',
-  QA: 'secondary',
-  Development: 'outline',
-  Staging: 'default',
-} as const
-
-const priorityBadgeVariant = {
-  Low: 'outline',
-  Medium: 'secondary',
-  High: 'default',
-  Critical: 'destructive',
-} as const
-
-const formatDate = (date: string) =>
-  new Date(date).toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
 
 const DeploymentCard = ({ deployment }: DeploymentCardProps) => {
   const nextStatus = nextStatusMap[deployment.status]
@@ -50,11 +17,11 @@ const DeploymentCard = ({ deployment }: DeploymentCardProps) => {
     },
     {
       label: 'Environment',
-      value: <Badge variant={environmentBadgeVariant[deployment.environment]}>{deployment.environment}</Badge>,
+      value: <Badge variant={badgeVariantMap.environment[deployment.environment]}>{deployment.environment}</Badge>,
     },
     {
       label: 'Status',
-      value: <Badge variant={statusBadgeVariant[deployment.status]}>{deployment.status}</Badge>,
+      value: <Badge variant={badgeVariantMap.status[deployment.status]}>{deployment.status}</Badge>,
     },
   ]
   const metadata = [
@@ -85,7 +52,7 @@ const DeploymentCard = ({ deployment }: DeploymentCardProps) => {
             <CardDescription>{deployment.id}</CardDescription>
           </div>
 
-          <Badge variant={priorityBadgeVariant[deployment.priority]}>{deployment.priority}</Badge>
+          <Badge variant={badgeVariantMap.priority[deployment.priority]}>{deployment.priority}</Badge>
         </div>
       </CardHeader>
 
