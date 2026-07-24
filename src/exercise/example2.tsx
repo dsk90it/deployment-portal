@@ -115,7 +115,7 @@ const SearchPlaceholder = () => {
   const hasDeployments = filteredDeployments.length > 0
 
   return (
-    <main className="container mx-auto py-8 px-4">
+    <>
       <h1 className="mb-6 text-3xl font-bold">Deployment Queue</h1>
 
       <Input
@@ -135,7 +135,7 @@ const SearchPlaceholder = () => {
       ) : (
         <p className="text-muted-foreground">No deployments found.</p>
       )}
-    </main>
+    </>
   )
 }
 
