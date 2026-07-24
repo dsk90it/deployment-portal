@@ -85,23 +85,49 @@ import { data } from '@/data/MOCK_DATA'
 import DeploymentCard from './example1'
 import { Input } from '@/components/ui/input'
 
+// export function useDeploymentFilters<T extends { application: string }>(deployments: T[]) {
+//   const [search, setSearch] = useState('')
+
+//   const filteredDeployments = useMemo(() => {
+//     const searchTerm = search.trim().toLowerCase()
+
+//     if (!searchTerm) {
+//       return deployments
+//     }
+
+//     return deployments.filter((deployment) => deployment.application.toLowerCase().includes(searchTerm))
+//   }, [deployments, search])
+
+//   return {
+//     search,
+//     setSearch,
+//     filteredDeployments,
+//   }
+// }
+
 // eslint-disable-next-line react-refresh/only-export-components
-export function useDeploymentFilters<T extends { application: string }>(deployments: T[]) {
+export function useDeploymentFilters<
+  T extends {
+    application: string
+    status: string
+  },
+>(deployments: T[]) {
   const [search, setSearch] = useState('')
+  const [status, setStatus] = useState('All')
 
   const filteredDeployments = useMemo(() => {
-    const searchTerm = search.trim().toLowerCase()
-
-    if (!searchTerm) {
-      return deployments
-    }
-
-    return deployments.filter((deployment) => deployment.application.toLowerCase().includes(searchTerm))
-  }, [deployments, search])
+    return deployments.filter((deployment) => {
+      const matchesSearch = deployment.application.toLowerCase().includes(search.trim().toLowerCase())
+      const matchesStatus = status === 'All' || deployment.status === status
+      return matchesSearch && matchesStatus
+    })
+  }, [deployments, search, status])
 
   return {
     search,
     setSearch,
+    status,
+    setStatus,
     filteredDeployments,
   }
 }
@@ -116,15 +142,18 @@ const SearchPlaceholder = () => {
 
   return (
     <>
-      <h1 className="mb-6 text-3xl font-bold">Deployment Queue</h1>
+      <div className="mb-6 flex items-center flex-wrap justify-between gap-4">
+        <h1 className="text-3xl font-bold">Deployment Queue</h1>
+      </div>
 
-      <Input
-        type="text"
-        placeholder="Search deployment by name..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="mb-4"
-      />
+      <div className="mb-4 flex items-center flex-wrap justify-between gap-4">
+        <Input
+          type="text"
+          placeholder="Search deployment by name..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
 
       {hasDeployments ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -141,8 +141,8 @@ const DeploymentCard = ({ deployment }: DeploymentCardProps) => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex flex-wrap items-center gap-1">
-          <span className="mr-auto">{deployment.application}</span>
+        <CardTitle className="flex flex-wrap items-center gap-1 justify-between">
+          {deployment.application}
           <span className="text-sm font-normal text-muted-foreground">{deployment.id}</span>
         </CardTitle>
         <CardDescription>{deployment.version}</CardDescription>

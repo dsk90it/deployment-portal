@@ -109,7 +109,7 @@
  * ============================================================================
  */
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query'
 
 /**
  * TODO
@@ -128,9 +128,7 @@ import { useQuery } from "@tanstack/react-query";
  */
 
 export default function Example3() {
- // This is a placeholder component to demonstrate the usage of the useQuery hook.
+  // This is a placeholder component to demonstrate the usage of the useQuery hook.
 
-  return <div className="container mx-auto p-6">
-    // You can use the useQuery hook to fetch deployments and display them using the DeploymentCard component.
-  </div>;
+  return <>// You can use the useQuery hook to fetch deployments and display them using the DeploymentCard component.</>
 }
