@@ -141,11 +141,11 @@ const DeploymentCard = ({ deployment }: DeploymentCardProps) => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          {deployment.application}
-          <code className="ml-auto">{deployment.version}</code>
+        <CardTitle className="flex flex-wrap items-center gap-1">
+          <span className="mr-auto">{deployment.application}</span>
+          <span className="text-sm font-normal text-muted-foreground">{deployment.id}</span>
         </CardTitle>
-        <CardDescription>{deployment.id}</CardDescription>
+        <CardDescription>{deployment.version}</CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-3">
