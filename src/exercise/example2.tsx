@@ -81,29 +81,10 @@
  * ============================================================================
  */
 import { useMemo, useState } from 'react'
+import type { DeploymentStatus } from '@/types'
 import { data } from '@/data/MOCK_DATA'
 import DeploymentCard from './example1'
 import { Input } from '@/components/ui/input'
-
-// export function useDeploymentFilters<T extends { application: string }>(deployments: T[]) {
-//   const [search, setSearch] = useState('')
-
-//   const filteredDeployments = useMemo(() => {
-//     const searchTerm = search.trim().toLowerCase()
-
-//     if (!searchTerm) {
-//       return deployments
-//     }
-
-//     return deployments.filter((deployment) => deployment.application.toLowerCase().includes(searchTerm))
-//   }, [deployments, search])
-
-//   return {
-//     search,
-//     setSearch,
-//     filteredDeployments,
-//   }
-// }
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function useDeploymentFilters<
@@ -113,7 +94,7 @@ export function useDeploymentFilters<
   },
 >(deployments: T[]) {
   const [search, setSearch] = useState('')
-  const [status, setStatus] = useState('All')
+  const [status, setStatus] = useState<DeploymentStatus | 'All'>('All')
 
   const filteredDeployments = useMemo(() => {
     return deployments.filter((deployment) => {

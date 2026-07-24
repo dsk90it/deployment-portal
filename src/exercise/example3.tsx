@@ -109,7 +109,9 @@
  * ============================================================================
  */
 
+import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import type { DeploymentStatus } from '@/types'
 import { getDeployments } from '@/api/diploymentApi'
 import { useDeploymentFilters } from './example2'
 import DeploymentCard from './example1'
@@ -144,6 +146,10 @@ export default function Example3() {
 
   const { search, setSearch, status, setStatus, filteredDeployments } = useDeploymentFilters(data)
   const hasDeployments = filteredDeployments.length > 0
+  const statuses = useMemo<Array<DeploymentStatus | 'All'>>(
+    () => ['All', ...new Set(data.map((deployment) => deployment.status))],
+    [data],
+  )
 
   if (isLoading) {
     return <p>Loading deployments...</p>
@@ -157,7 +163,9 @@ export default function Example3() {
     <>
       <div className="mb-6 flex items-center flex-wrap justify-between gap-4">
         <h1 className="text-3xl font-bold">Deployment Queue</h1>
-        <p className="text-muted-foreground">Total Deployments: {data.length}</p>
+        <p className="text-muted-foreground">
+          Showing {filteredDeployments.length} of {data.length} deployments
+        </p>
       </div>
 
       <div className="mb-4 flex flex-col md:flex-row items-center md:justify-between gap-4">
@@ -169,16 +177,16 @@ export default function Example3() {
         />
 
         <div className="w-full md:w-48 md:shrink-0">
-          <Select className="w-full" value={status} onChange={(key) => setStatus(String(key))}>
+          <Select className="w-full" value={status} onChange={(key) => setStatus(key as DeploymentStatus | 'All')}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="p-2">
-              <SelectItem id="All">All</SelectItem>
-              <SelectItem id="Pending">Pending</SelectItem>
-              <SelectItem id="In Progress">In Progress</SelectItem>
-              <SelectItem id="Completed">Completed</SelectItem>
-              <SelectItem id="Failed">Failed</SelectItem>
+              {statuses.map((status) => (
+                <SelectItem key={status} id={status}>
+                  {status}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
