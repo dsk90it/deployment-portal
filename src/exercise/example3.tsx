@@ -109,14 +109,14 @@
  * ============================================================================
  */
 
-import { useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import type { DeploymentStatus } from '@/types'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import type { Deployment, DeploymentStatus } from '@/types'
 import { getDeployments } from '@/api/diploymentApi'
 import { useDeploymentFilters } from './example2'
 import DeploymentCard from './example1'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { nextStatusMap } from '@/lib/utils'
 
 /**
  * TODO
@@ -135,6 +135,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
  */
 
 export default function Example3() {
+  const queryClient = useQueryClient()
   const {
     data = [],
     isLoading,
@@ -146,10 +147,20 @@ export default function Example3() {
 
   const { search, setSearch, status, setStatus, filteredDeployments } = useDeploymentFilters(data)
   const hasDeployments = filteredDeployments.length > 0
-  const statuses = useMemo<Array<DeploymentStatus | 'All'>>(
-    () => ['All', ...new Set(data.map((deployment) => deployment.status))],
-    [data],
-  )
+  const statuses: Array<DeploymentStatus | 'All'> = ['All', 'Pending', 'In Progress', 'Completed', 'Failed']
+
+  const handleAdvance = (deploymentId: string) => {
+    queryClient.setQueryData<Deployment[]>(['deployments'], (currentDeployments = []) =>
+      currentDeployments.map((deployment) => {
+        if (deployment.id !== deploymentId) {
+          return deployment
+        }
+
+        const nextStatus = nextStatusMap[deployment.status]
+        return nextStatus ? { ...deployment, status: nextStatus } : deployment
+      }),
+    )
+  }
 
   if (isLoading) {
     return <p>Loading deployments...</p>
@@ -195,7 +206,7 @@ export default function Example3() {
       {hasDeployments ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredDeployments.map((deployment) => (
-            <DeploymentCard key={deployment.id} deployment={deployment} />
+            <DeploymentCard key={deployment.id} deployment={deployment} onClickAdvance={handleAdvance} />
           ))}
         </div>
       ) : (

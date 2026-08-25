@@ -101,9 +101,10 @@ import { badgeVariantMap, formatDate, nextStatusMap } from '@/lib/utils'
 
 interface DeploymentCardProps {
   deployment: Deployment
+  onClickAdvance?: (deploymentId: string) => void
 }
 
-const DeploymentCard = ({ deployment }: DeploymentCardProps) => {
+const DeploymentCard = ({ deployment, onClickAdvance = () => {} }: DeploymentCardProps) => {
   const nextStatus = nextStatusMap[deployment.status]
   const deploymentInfo = [
     {
@@ -169,7 +170,9 @@ const DeploymentCard = ({ deployment }: DeploymentCardProps) => {
 
       {nextStatus && (
         <CardFooter>
-          <Button className="w-full">Advance to {nextStatus}</Button>
+          <Button onClick={() => onClickAdvance(deployment.id)} className="w-full">
+            Advance to {nextStatus}
+          </Button>
         </CardFooter>
       )}
     </Card>
