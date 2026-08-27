@@ -96,8 +96,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import type { Deployment } from '@/types'
-import { badgeVariantMap, formatDate, nextStatusMap } from '@/lib/utils'
+import type { BadgeVariant, Deployment } from '@/types'
+import { formatDate, nextStatusMap } from '@/lib/utils'
 
 interface DeploymentCardProps {
   deployment: Deployment
@@ -106,37 +106,31 @@ interface DeploymentCardProps {
 
 const DeploymentCard = ({ deployment, onClickAdvance = () => {} }: DeploymentCardProps) => {
   const nextStatus = nextStatusMap[deployment.status]
+  const statusColorMap: Record<Deployment['status'], BadgeVariant> = {
+    Pending: 'warning',
+    'In Progress': 'blue',
+    Completed: 'success',
+    Failed: 'destructive',
+  }
   const deploymentInfo = [
     {
       label: 'Priority',
-      value: <Badge variant={badgeVariantMap.priority[deployment.priority]}>{deployment.priority}</Badge>,
+      value: <Badge variant="outline">{deployment.priority}</Badge>,
     },
     {
       label: 'Environment',
-      value: <Badge variant={badgeVariantMap.environment[deployment.environment]}>{deployment.environment}</Badge>,
+      value: <Badge variant="outline">{deployment.environment}</Badge>,
     },
     {
       label: 'Status',
-      value: <Badge variant={badgeVariantMap.status[deployment.status]}>{deployment.status}</Badge>,
+      value: <Badge variant={statusColorMap[deployment.status]}>{deployment.status}</Badge>,
     },
   ]
   const metadata = [
-    {
-      label: 'Requested By',
-      value: deployment.requestedBy,
-    },
-    {
-      label: 'Requested At',
-      value: formatDate(deployment.requestedAt),
-    },
-    {
-      label: 'Scheduled At',
-      value: formatDate(deployment.scheduledAt),
-    },
-    {
-      label: 'Region',
-      value: deployment.region,
-    },
+    { label: 'Requested By', value: deployment.requestedBy },
+    { label: 'Requested At', value: formatDate(deployment.requestedAt) },
+    { label: 'Scheduled At', value: formatDate(deployment.scheduledAt) },
+    { label: 'Region', value: deployment.region },
   ]
 
   return (
