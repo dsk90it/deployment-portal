@@ -97,7 +97,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import type { BadgeVariant, Deployment } from '@/types'
-import { formatDate, nextStatusMap } from '@/lib/utils'
+import { cn, formatDate, nextStatusMap } from '@/lib/utils'
 
 interface DeploymentCardProps {
   deployment: Deployment
@@ -106,6 +106,12 @@ interface DeploymentCardProps {
 
 const DeploymentCard = ({ deployment, onClickAdvance = () => {} }: DeploymentCardProps) => {
   const nextStatus = nextStatusMap[deployment.status]
+  const borderColorMap: Record<Deployment['priority'], string> = {
+    Critical: 'border-l-red-500',
+    High: 'border-l-orange-500',
+    Medium: 'border-l-yellow-500',
+    Low: 'border-l-green-500',
+  }
   const statusColorMap: Record<Deployment['status'], BadgeVariant> = {
     Pending: 'warning',
     'In Progress': 'blue',
@@ -134,7 +140,7 @@ const DeploymentCard = ({ deployment, onClickAdvance = () => {} }: DeploymentCar
   ]
 
   return (
-    <Card className="w-full hover:ring-primary transition-shadow">
+    <Card className={cn('w-full border-l-4 hover:ring-primary transition-shadow', borderColorMap[deployment.priority])}>
       <CardHeader>
         <CardTitle className="flex flex-wrap items-center gap-1 justify-between">
           {deployment.application}
@@ -155,9 +161,9 @@ const DeploymentCard = ({ deployment, onClickAdvance = () => {} }: DeploymentCar
         <Separator />
 
         {metadata.map(({ label, value }) => (
-          <div key={label} className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">{label}</span>
-            <span className="font-medium">{value}</span>
+          <div key={label} className="flex items-center justify-between gap-3">
+            <span className="text-sm text-muted-foreground shrink-0">{label}</span>
+            <span className="font-medium truncate">{value}</span>
           </div>
         ))}
       </CardContent>
